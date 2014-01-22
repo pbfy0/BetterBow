@@ -1,0 +1,4 @@
+name: BetterBow
+main: tk.pbfy0.betterbow.BetterBow
+version: 1.0
+depend: [ProtocolLib]
