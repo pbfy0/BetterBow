@@ -14,12 +14,11 @@ public final class BetterBowListener implements Listener {
 	
 	@EventHandler
 	public void onBowFire(EntityShootBowEvent event){
+		if(event instanceof EntityShootBetterBowEvent) return;
 		if(!(event.getEntity() instanceof Player)) return;
 		Player player = (Player) event.getEntity();
-		Fire fire = plugin.fires.get(player.getName());
-		if(fire != null){
-			plugin.fires.remove(player);
-			fire.cancel();
+		if(plugin.nofire.contains(player.getName())){
+			event.setCancelled(true);
 		}
 	}
 
