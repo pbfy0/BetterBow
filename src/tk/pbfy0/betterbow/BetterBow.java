@@ -59,7 +59,7 @@ public final class BetterBow extends JavaPlugin {
 								if (nofire.contains(player.getName())) {
 									return;
 								}
-								Fire fire = new Fire(self, player, item);
+								Fire fire = new Fire(self, player, player.getInventory().getHeldItemSlot());
 								fire.runTaskLater(self, Math.min(11 - effLevel, 0));
 								nofire.add(player.getName());
 							}
@@ -81,11 +81,11 @@ class Fire extends BukkitRunnable {
 	private ItemStack bow;
 	private boolean autofire = false;
 
-	public Fire(BetterBow plugin_, Player player_, ItemStack bow_) {
+	public Fire(BetterBow plugin_, Player player_, int slot_) {
 		plugin = plugin_;
 		player = player_;
-		bow = bow_;
-		slot = player.getInventory().getHeldItemSlot();
+		slot = slot_;
+		bow = player.getInventory().getItem(slot);
 		autofire = bow.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS);
 	}
 
@@ -173,12 +173,12 @@ class Fire extends BukkitRunnable {
 										// being restored
 					player.getWorld().playSound(player.getLocation(),
 							Sound.ITEM_BREAK, 1.0F, 1.0F);
+					break;
 				}
 			}
 		}
 
-		if (autofire)
-			new RestoreBow().runTaskLater(plugin, 1);
+		if (autofire) new RestoreBow().runTaskLater(plugin, 1);
 	}
 }
 
