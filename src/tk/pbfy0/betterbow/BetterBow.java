@@ -60,7 +60,7 @@ public final class BetterBow extends JavaPlugin {
 									return;
 								}
 								Fire fire = new Fire(self, player, player.getInventory().getHeldItemSlot());
-								fire.runTaskLater(self, Math.min(11 - effLevel, 0));
+								fire.runTaskLater(self, Math.max(11 - effLevel, 0));
 								nofire.add(player.getName());
 							}
 						}
