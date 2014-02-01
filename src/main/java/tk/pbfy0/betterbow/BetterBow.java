@@ -1,8 +1,10 @@
 package tk.pbfy0.betterbow;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+
 import org.bukkit.util.Vector;
 
 import net.minecraft.server.v1_7_R1.EntityArrow;
@@ -21,6 +23,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.mcstats.Metrics;
 
 import com.comphenix.packetwrapper.WrapperPlayClientBlockPlace;
 import com.comphenix.protocol.PacketType;
@@ -40,6 +43,12 @@ public final class BetterBow extends JavaPlugin {
 		nofire = new HashSet<String>();
 		random = new Random();
 		getLogger().info("BetterBow enabled");
+		try{
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+		}catch(IOException e){
+			getLogger().info("Metrics failed to start");
+		}
 		getServer().getPluginManager().registerEvents(
 				new BetterBowListener(this), this);
 		ProtocolLibrary.getProtocolManager().addPacketListener(
