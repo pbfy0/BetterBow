@@ -26,7 +26,7 @@ public final class BetterBowListener implements Listener {
 			plugin.nofire.remove(player.getName());
 		}else{
 			ItemStack bow = player.getItemInHand();
-			if(bow != null && bow.containsEnchantment(Enchantment.PROTECTION_PROJECTILE)){
+			if(bow != null && bow.containsEnchantment(Enchantment.PROTECTION_PROJECTILE) && player.hasPermission("betterbow.sniper")){
 				Arrow arrow = (Arrow)event.getProjectile();
 				arrow.setVelocity(arrow.getVelocity().add(
 						player.getLocation().getDirection().multiply(bow.getEnchantmentLevel(Enchantment.PROTECTION_PROJECTILE)/3)));
