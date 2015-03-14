@@ -50,9 +50,8 @@
       <url>http://repo.bukkit.org/content/groups/public/</url>
     </repository>
     <repository>
-      <id>comphenix-rep</id>
-      <name>Comphenix Repository</name>
-      <url>http://repo.comphenix.net/content/groups/public</url>
+      <id>shadowvolt-repo</id>
+      <url>http://ci.shadowvolt.com/plugin/repository/everything/</url>
     </repository>
     <repository>
       <id>Plugin Metrics</id>
@@ -63,14 +62,15 @@
   	<dependency>
   		<groupId>org.bukkit</groupId>
   		<artifactId>craftbukkit</artifactId>
-  		<version>1.7.2-R0.3-SNAPSHOT</version>
-  		<scope>provided</scope>
+  		<version>1.8-R0.1-SNAPSHOT</version>
+  		<scope>system</scope>
+  		<systemPath>C:\Users\Paul\spigot-1.8-R0.1-SNAPSHOT.jar</systemPath>
   	</dependency>
-  	  	<dependency>
+  	<dependency>
   		<groupId>com.comphenix.protocol</groupId>
   		<artifactId>ProtocolLib</artifactId>
   		<scope>provided</scope>
-  		<version>3.1.2</version>
+  		<version>3.6.3-SNAPSHOT</version>
   	</dependency>
   	<dependency>
       <groupId>org.mcstats.bukkit</groupId>

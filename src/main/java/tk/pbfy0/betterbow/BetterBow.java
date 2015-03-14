@@ -7,12 +7,12 @@ import java.util.Set;
 
 import org.bukkit.util.Vector;
 
-import net.minecraft.server.v1_7_R1.EntityArrow;
+import net.minecraft.server.v1_8_R1.EntityArrow;
 
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftArrow;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftArrow;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
@@ -31,6 +31,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.BlockPosition;
 
 public final class BetterBow extends JavaPlugin {
 	private BetterBow self;
@@ -58,8 +59,9 @@ public final class BetterBow extends JavaPlugin {
 						PacketContainer packet = event.getPacket();
 						WrapperPlayClientBlockPlace wrapper = new WrapperPlayClientBlockPlace(
 								packet);
-						if (wrapper.getX() == -1 && wrapper.getY() == -1
-								&& wrapper.getZ() == -1) {
+						BlockPosition pos = wrapper.getLocation();
+						if (pos.getX() == -1 && pos.getY() == -1
+								&& pos.getZ() == -1) {
 							Player player = event.getPlayer();
 							if(!player.hasPermission("betterbow.fire")) return;
 							ItemStack item = wrapper.getHeldItem();
@@ -151,7 +153,8 @@ class Fire extends BukkitRunnable {
 				arrow.setFireTicks(2000);
 			}
 			if (bow.containsEnchantment(Enchantment.ARROW_KNOCKBACK)) {
-				entityArrow.a(bow
+				//entityArrow.
+				entityArrow.setKnockbackStrength(bow
 						.getEnchantmentLevel(Enchantment.ARROW_KNOCKBACK));
 			}
 			EntityShootBetterBowEvent ev = new EntityShootBetterBowEvent(
