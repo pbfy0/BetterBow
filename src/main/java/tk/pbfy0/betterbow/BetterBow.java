@@ -82,6 +82,7 @@ public final class BetterBow extends JavaPlugin {
 	public void onDisable() {
 
 	}
+	
 }
 
 class Fire extends BukkitRunnable {
@@ -90,13 +91,22 @@ class Fire extends BukkitRunnable {
 	private int slot;
 	private ItemStack bow;
 	private boolean autofire = false;
+	private float force = 1;
 
+	
 	public Fire(BetterBow plugin_, Player player_, int slot_) {
+		this(plugin_, player_, slot_, player_.getInventory().getItem(slot_));
+	}
+	public Fire(BetterBow plugin_, Player player_, int slot_, ItemStack bow_) {
+		this(plugin_, player_, slot_, bow_, bow_.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS) && player_.hasPermission("betterbow.autofire"), 1);
+	}
+	public Fire(BetterBow plugin_, Player player_, int slot_, ItemStack bow_, boolean autofire_, float force_) {
 		plugin = plugin_;
 		player = player_;
 		slot = slot_;
-		bow = player.getInventory().getItem(slot);
-		autofire = bow.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS) && player.hasPermission("betterbow.autofire");
+		bow = bow_;
+		autofire = autofire_;
+		force = force_;
 	}
 
 	class RestoreBow extends BukkitRunnable {
@@ -126,22 +136,18 @@ class Fire extends BukkitRunnable {
 		for (int i = 0; i < arrows; i++) {
 			Arrow arrow = player.launchProjectile(Arrow.class);
 			Vector velocity = player.getLocation().getDirection();
-			if (!player.hasPermission("betterbow.antispread") || bow.getEnchantmentLevel(Enchantment.SILK_TOUCH) < 5) {
-				double spreadConstant = 0.00745D * (5D - bow
-						.getEnchantmentLevel(Enchantment.SILK_TOUCH)) / 5D;
-				Vector spread = new Vector(
-						(plugin.random.nextBoolean() ? 1 : -1)
-								* (plugin.random.nextDouble() * spreadConstant),
-						(plugin.random.nextBoolean() ? 1 : -1)
-								* (plugin.random.nextDouble() * spreadConstant),
-						(plugin.random.nextBoolean() ? 1 : -1)
-								* (plugin.random.nextDouble() * spreadConstant));
-				velocity.add(spread);
+			velocity.multiply(force);
+			double spreadConstant = 0.00745D;
+			Vector spread = new Vector(
+					(plugin.random.nextBoolean() ? 1 : -1)
+							* (plugin.random.nextDouble() * spreadConstant),
+					(plugin.random.nextBoolean() ? 1 : -1)
+							* (plugin.random.nextDouble() * spreadConstant),
+					(plugin.random.nextBoolean() ? 1 : -1)
+							* (plugin.random.nextDouble() * spreadConstant));
+			velocity.add(spread);
+			velocity.multiply(3);
 
-			}
-			if(player.hasPermission("betterbow.sniper"))
-				velocity.multiply(3 + bow.getEnchantmentLevel(Enchantment.PROTECTION_PROJECTILE) / 3);
- 
 			arrow.setVelocity(velocity); // seems about right
 			EntityArrow entityArrow = ((CraftArrow) arrow).getHandle();
 			if (bow.containsEnchantment(Enchantment.ARROW_DAMAGE)) {
@@ -181,7 +187,7 @@ class Fire extends BukkitRunnable {
 							.getEnchantmentLevel(Enchantment.DURABILITY)) != 0)) {
 				bow.setDurability((short) (bow.getDurability() + 1));
 				if (bow.getDurability() >= bow.getType().getMaxDurability()) {
-					if(!autofire)
+					if(!autofire && slot != -1)
 						player.getInventory().setItem(slot, null);
 					autofire = false; // Prevents the bow from being restored
 					player.getWorld().playSound(player.getLocation(),
